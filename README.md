@@ -2,15 +2,18 @@
 
 This is an attempt to streamline the queuing system of the WPI 3d print lab. 
 
-#Credentials Required
+# Credentials Required
 - create a file named 'tdposUserCredentials'
 
-- define a 'tdposUsername' and tdposPassword'
+- define a 'tdposUsername' and tdposPassword' as strings
 
  - for a future google sheets implementation:
 https://developers.google.com/sheets/api/quickstart/python
 
-#Current Operation
+follow the guide and put the created file in the root directory
+
+
+# Current Operation
 
 To use run the 'commandLineInterface' file. 
 
@@ -42,11 +45,17 @@ To use run the 'commandLineInterface' file.
 
 - the information is added the the printDetails dict, and then put in a prefilled google forms url and posted to the sheet.
 
-##todo:
+## todo:
 
 - Clean the heaping pile of trash that is this program. There are a bunch of unused imports and unused files, but some may be useful for building an interface in the future(with flask or tkinter, ~~they're both here!~~ in my repo and ignored. )
 
 - enable class input for MQP, ES1310 etc
   - make a way to crosscheck WPI ID with class rosters
 
--a way to select multiple prints, right now the first thing found in the list that matches the email is used
+- a way to select multiple prints, right now the first thing found in the list that matches the email is used
+
+- create a UI
+
+- make it run on raspberry PI
+
+- connect a Thermal Printer
