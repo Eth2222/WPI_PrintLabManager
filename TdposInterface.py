@@ -34,11 +34,14 @@ class TdposMiner() :
     def search(self, driver, username):
         print('search method called')
         #create x path search string 
-        xpathSearch = "//*[contains(.,'"+username+"')]"
-
+        #xpathSearch = "//*[contains(.,'"+username+"')]"
+        xpathSearch = "//*[text()[contains(.,'"+username+"')]]"
         #returns a list of elements with that name 
         #there is some issue here where the top Taz queue: "Lultzbot Taz 6 Queue Lulzbot TAZ6" is not searchable...sometimes. The "DO NOT AUTHORIZE- TEMPORARY USER Lulzbot TAZ6" is searchable
+        
         webElementList = driver.find_elements_by_xpath(xpathSearch)
+        for i in webElementList:
+            print((i.find_element_by_xpath('..')).text)
         #print(webElementList)
         #Goes two up from that element to get all the job data associated
         x= len(webElementList)-2
@@ -51,18 +54,17 @@ class TdposMiner() :
         queueName = (webElementList[len(webElementList)-4].text)
         #this if statement transforms the queue name into a form that the Google form will take as input
         if('Ultimaker' in queueName):
-            print ('ultimaker')
-            queueName = 'Queue is Ultimaker 3'
+            #print ('Queue is ultimaker')
+            queueName = 'Ultimaker 3'
         elif('TAZ6' or 'TAZ' in queueName):
-            print ('Queue is TAZ6')
+            #print ('Queue is TAZ6')
             queueName = 'Lulzbot Taz 6'
         else:
-            print("queue name not found")
+            #print("queue name not found")
             queueName = 'NaN'
         #all the print info, unparsed, raw
         printDetails = webElementList[x].text
-        #print('the print details or web elements.text:')
-        #print(printDetails)
+        print('the print details or web elements.text:', printDetails)
 
         #should call the parser as a helper method and just return the printjob data structure
         printJobDict = TdposMiner.parser(printDetails, queueName)
