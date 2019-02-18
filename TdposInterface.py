@@ -1,26 +1,23 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-import time
 import printJob
 import re
 import commandLineInterface
 import tdposUserCredentials
-#from selenium.webdriver.support.ui import WebDriverWait
 import globals
-
 
 class TdposMiner() :
     
     def initializeListener(self):
         driver = webdriver.Chrome()
-        #login procedure. Will need to remove username and passwords and make them gui inputs in future
+        #login procedure. Will need to make username and password gui inputs in future
         driver.get('https://cloud.3dprinteros.com/printing/')
         driver.find_element_by_id('signinUsername').send_keys(tdposUserCredentials.tdposUsername)
         driver.find_element_by_id('signinPassword').send_keys(tdposUserCredentials.tdposPassword)
         driver.find_element_by_name('signIn').click()
         driver.get('https://cloud.3dprinteros.com/printing/')   
-
+        #these might be useful for inserting into an sql table later
         #tazTable = driver.find_element(By.XPATH, "//*[@id='id_box_51246']/span/table")
         #ultiTable = driver.find_element(By.XPATH, "//*[@id='id_box_51247']/span/table")
         #print("Taz 6 Queue" +tazTable.text +"/n Ultimaker Table /n" +ultiTable.text)
@@ -30,7 +27,6 @@ class TdposMiner() :
     def closeDriver(self):
         webdriver.Chrome().close()
         
-    
     def search(self, driver, username):
         print('search method called')
         #create x path search string 
@@ -44,44 +40,14 @@ class TdposMiner() :
         for i in webElementList:
             #print((i.find_element_by_xpath('..')).text)
             jobMatchList.append((i.find_element_by_xpath('..')).text)
-        
         for i in jobMatchList:
+            #Where the job matches are printed in a selectable list form. 
             print(jobMatchList.index(i)," )  ",i)
-        #Goes two up from that element to get all the job data associated
-        x= len(webElementList)-2
-        '''
-        for i in range(len(webElementList)):
-            print (webElementList[i].text)
-        print(x)
-        '''
-        #finds if the ultimaker or taz is mentioned to determine the queue name
-        queueName = (webElementList[len(webElementList)-4].text)
-        #this if statement transforms the queue name into a form that the Google form will take as input
-        if('Ultimaker' in queueName):
-            #print ('Queue is ultimaker')
-            queueName = 'Ultimaker 3'
-        elif('TAZ6' or 'TAZ' in queueName):
-            #print ('Queue is TAZ6')
-            queueName = 'Lulzbot Taz 6'
-        else:
-            #print("queue name not found")
-            queueName = 'NaN'
-        #all the print info, unparsed, raw
-        printDetails = webElementList[x].text
-        print('the print details or web elements.text:', printDetails)
+        return jobMatchList
 
-        #should call the parser as a helper method and just return the printjob data structure
-        printJobDict = TdposMiner.parser(printDetails, queueName)
-        #print('the printjob dict:')
-        #print(printJobDict)
-        return printJobDict
-
-    @staticmethod
-    #manual line in for testing  
-    def parser(string, queueName):
+    def parser(self, string):
         #creates an array called splitString
         splitString = string.split(" ")
-        print("this is the split string list:")
         print(splitString)
         #finds gcode in the list, then makes it a marker to navigate the list from 
         #should really have a try block around this for statement
@@ -92,7 +58,6 @@ class TdposMiner() :
                 printNameIndex = splitString.index(text)
             elif '.stl' in text:
                 printNameIndex = splitString.index(text)
-            
         # Retrieve the Index of EST
         #should really have a try block around this for statement
         for text in splitString:
@@ -107,12 +72,10 @@ class TdposMiner() :
         tempList = []
         for i in range(estIndex+1, printNameIndex+1):
             tempList.append(splitString[i])
-        print('tempList', tempList) 
+        #print('tempList', tempList) 
         printName = ('_'.join(tempList))
-        print('printname', printName)
-           # printName = str(splitString[i])
-            
-        #print(printName)
+        #print('printname', printName)
+    
         #define all variables to create the printjob object
         date = splitString[0]
         time = splitString[1]
@@ -125,11 +88,21 @@ class TdposMiner() :
         jobId = string
         jobId = re.findall(r'\d\d\d\d\d', jobId)
         jobId = str(jobId[0])
-
-    
-        #print(date, time, printName, email, weight, duration,queueName)
+        #now find the queuename with a similar method
+        queueName = string
+        #there are a bunch of numbers with four digits, so a list is returned
+        queueName = re.findall(r'\d\d\d\d\d', queueName)
+        #iterate through the list looking for matches, iterates backwards because the printer ID is at the end. A little hackey but it works.
+        for i in reversed(queueName):
+            if '51247' in queueName:
+                queueName = 'Ultimaker 3'
+            elif '51246' in queueName:
+                queueName = 'Lulzbot Taz 6'
+            #need actual error handling in this area. 
+            else:
+                print('queuename does not match expected: ', queueName)
+        print(date, time, printName, email, weight, duration, queueName)
         #creates the identified print object
-        #printName = printJob.printJob(date, time, printName, email, weight, duration, queueName)
         printName = {"date":date, 
                     "time":time,
                     "printName": printName, 
@@ -138,7 +111,7 @@ class TdposMiner() :
                     "duration":duration, 
                     "jobId":jobId,
                     "queueName":queueName}
-        #print(printName)
+        print(printName)
         #CONSIDER having this return a json object string instead
         return printName
 

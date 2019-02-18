@@ -15,13 +15,8 @@ class googleSheetsPoster:
     #arguments it could take:
     #printName, username, printer, weight, time, employee, userType, material, color, Class, notes
     def fillForm(printJobDict):
-        #a dict holding the data which will be posted to the form
-        #payload = {'entry.1349225380':'print+nameTEST'}
-        #printJobDict.get('')
-        #formId = '1FAIpQLSf369fAiB4-6x6cFQjopzRjnPamtzlaCV6DnGNE5dIil9_OEg'
         #new form ID:
         formId = '1FAIpQLSeGLNIhUCkON1tQJpbe9wIzrgUPIsfYB5QrNYDyNOAoeY-xVQ'
-        print(type(str(printJobDict.get('jobId'))))
         url = 'https://docs.google.com/forms/d/e/'+formId+'/formResponse?usp=pp_url'+'&entry.1102589694='+str(printJobDict.get('customerName'))+'&entry.799051989='+str(printJobDict.get('email'))+'&entry.1829673705='+str(printJobDict.get('printName'))+'&entry.1926296081='+str(printJobDict.get('queueName'))+'&entry.1723229820='+'1hr+2min'+'&entry.1191086835='+str(printJobDict.get('jobId'))+'&entry.1878466307='+str(printJobDict.get('colorPref'))+'&entry.546565404='+'PLA'+'&entry.533100273='+'Basic'
         print(url)
         #+'&entry.1416598942='+ no class option right now
@@ -30,7 +25,7 @@ class googleSheetsPoster:
         
         #This is where the data is actually posted
         print(requests.post(url))
-        if requests.post(url) == '<Response [200]>':
+        if '<Response [200]>' in requests.post(url):
             print("sucessfully submitted to form")
         
 '''
