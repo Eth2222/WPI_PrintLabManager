@@ -40,9 +40,13 @@ class TdposMiner() :
         #there is some issue here where the top Taz queue: "Lultzbot Taz 6 Queue Lulzbot TAZ6" is not searchable...sometimes. The "DO NOT AUTHORIZE- TEMPORARY USER Lulzbot TAZ6" is searchable
         
         webElementList = driver.find_elements_by_xpath(xpathSearch)
+        jobMatchList = []
         for i in webElementList:
-            print((i.find_element_by_xpath('..')).text)
-        #print(webElementList)
+            #print((i.find_element_by_xpath('..')).text)
+            jobMatchList.append((i.find_element_by_xpath('..')).text)
+        
+        for i in jobMatchList:
+            print(jobMatchList.index(i)," )  ",i)
         #Goes two up from that element to get all the job data associated
         x= len(webElementList)-2
         '''
