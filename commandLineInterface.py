@@ -10,7 +10,8 @@ class commandLineInterface:
             try:
                 printJobDict = (TdposInterface.TdposMiner.search(self, globals.driver, userEmail))
                 break
-            except:
+            except Exception as e:
+                print(e)
                 print('Email not found. Restarting search')
         print('found job:') 
         print(printJobDict)

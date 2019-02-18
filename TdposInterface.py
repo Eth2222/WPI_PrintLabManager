@@ -39,7 +39,7 @@ class TdposMiner() :
         #returns a list of elements with that name 
         #there is some issue here where the top Taz queue: "Lultzbot Taz 6 Queue Lulzbot TAZ6" is not searchable...sometimes. The "DO NOT AUTHORIZE- TEMPORARY USER Lulzbot TAZ6" is searchable
         webElementList = driver.find_elements_by_xpath(xpathSearch)
-
+        #print(webElementList)
         #Goes two up from that element to get all the job data associated
         x= len(webElementList)-2
         '''
@@ -52,18 +52,22 @@ class TdposMiner() :
         #this if statement transforms the queue name into a form that the Google form will take as input
         if('Ultimaker' in queueName):
             print ('ultimaker')
-            queueName = 'Ultimaker 3'
+            queueName = 'Queue is Ultimaker 3'
         elif('TAZ6' or 'TAZ' in queueName):
-            print ('TAZ6')
+            print ('Queue is TAZ6')
             queueName = 'Lulzbot Taz 6'
         else:
             print("queue name not found")
             queueName = 'NaN'
         #all the print info, unparsed, raw
         printDetails = webElementList[x].text
+        #print('the print details or web elements.text:')
+        #print(printDetails)
 
         #should call the parser as a helper method and just return the printjob data structure
         printJobDict = TdposMiner.parser(printDetails, queueName)
+        #print('the printjob dict:')
+        #print(printJobDict)
         return printJobDict
 
     @staticmethod
@@ -71,31 +75,48 @@ class TdposMiner() :
     def parser(string, queueName):
         #creates an array called splitString
         splitString = string.split(" ")
-        #need to search the array for .gcode then find the string between there and EST
+        print("this is the split string list:")
+        print(splitString)
+        #finds gcode in the list, then makes it a marker to navigate the list from 
+        #should really have a try block around this for statement
         for text in splitString:
-            if '.gcode' in text:
+            if 'gcode' in text:
                 #print(text)
                 #print (splitString.index(text))
-                gcodeIndex = splitString.index(text)
+                printNameIndex = splitString.index(text)
+            elif '.stl' in text:
+                printNameIndex = splitString.index(text)
+            
         # Retrieve the Index of EST
+        #should really have a try block around this for statement
         for text in splitString:
             if 'EST' in text:
                 #print(text)
                 #print (splitString.index(text))
                 estIndex = splitString.index(text)
+            
         #iterates from the EST string item to the .gcode, adding all to the print name
-        for i in range(estIndex+1, gcodeIndex+1):
-            printName = str(splitString[i])
+        #need to use .join here in the range, may need to make a new temp list in the range
+        #this seems like a very complex way to join items in a range in a list
+        tempList = []
+        for i in range(estIndex+1, printNameIndex+1):
+            tempList.append(splitString[i])
+        print('tempList', tempList) 
+        printName = ('_'.join(tempList))
+        print('printname', printName)
+           # printName = str(splitString[i])
+            
         #print(printName)
         #define all variables to create the printjob object
         date = splitString[0]
         time = splitString[1]
         printName = printName
-        email = splitString[gcodeIndex+1]
-        weight = splitString[gcodeIndex+2]
-        duration = splitString[gcodeIndex+4]
+        email = splitString[printNameIndex+1]
+        weight = splitString[printNameIndex+2]
+        duration = splitString[printNameIndex+4]
         #job ID parsing to remove the integers from the string
-        jobId = splitString[gcodeIndex+10]
+        #jobId = splitString[printNameIndex+10]
+        jobId = string
         jobId = re.findall(r'\d\d\d\d\d', jobId)
         jobId = str(jobId[0])
 
