@@ -40,7 +40,6 @@ class TdposMiner() :
         for i in webElementList:
             #print((i.find_element_by_xpath('..')).text)
             jobMatchList.append((i.find_element_by_xpath('..')).text)
-            jobMatchList.append((i.find_element_by_xpath('../..').text))
         for i in jobMatchList:
             #Where the job matches are printed in a selectable list form. 
             print(jobMatchList.index(i)," )  ",i)
@@ -49,7 +48,7 @@ class TdposMiner() :
     def parser(self, string):
         #creates an array called splitString
         splitString = string.split(" ")
-        print('this is the split string: ', splitString)
+        print(splitString)
         #finds gcode in the list, then makes it a marker to navigate the list from 
         #should really have a try block around this for statement
         for text in splitString:
@@ -90,15 +89,11 @@ class TdposMiner() :
         jobId = re.findall(r'\d\d\d\d\d', jobId)
         jobId = str(jobId[0])
         #now find the queuename with a similar method
-        print('this is the string right before the queuename search: ', string)
         queueName = string
         #there are a bunch of numbers with four digits, so a list is returned
         queueName = re.findall(r'\d\d\d\d\d', queueName)
         #iterate through the list looking for matches, iterates backwards because the printer ID is at the end. A little hackey but it works.
-
         for i in reversed(queueName):
-            #just added the 23876 here, not sure if the queue numbers change periodically, this could be a major issue
-            print (i)
             if '51247' in queueName:
                 queueName = 'Ultimaker 3'
             elif '51246' in queueName:
@@ -123,9 +118,8 @@ class TdposMiner() :
 #15.12.2018 17:08 EST	Spiral sphere_ornament_2013-11-23.gcode	Ultimaker 3 - 05	gr-fisprototypinglab@wpi.edu	U3, PLA, 0.25		4.13g	40m / 46m
 #what the actual return text looks like:
 #25.12.2018 21:09 EST Viking Duck.gcode emerrill@wpi.edu 6.09g $0.00 00:36 / - In queue Job ID:663678, Printer ID:51246
-
 '''
-    TODO
+TODO
 -figure out how to parse file names with spaces
         -regex for find date: /^(?:[^ ]*\ ){2}([^ ]*)/g
 -develop seperate search methods for part names and usernames
