@@ -47,8 +47,11 @@ To use run the 'commandLineInterface' file.
 
 ## Known Issues:
 
-- Randomly unable to find any matching jobs or just ulitmaker queued jobs.  Very strange. May have to do with how the page is loading. 
- *seems like this happens when there is more than one job under the same email*
+- Cannot have a space in any of the command line inputs because it messes up the URL String
+
+- needs error handling if no prints are found
+
+- if there is a number in the print name, it can get confused and pick that as the queue ID
 
 ## todo:
 
