@@ -34,17 +34,30 @@ class TdposMiner() :
         xpathSearch = "//*[text()[contains(.,'"+username+"')]]"
         #returns a list of elements with that name 
         #there is some issue here where the top Taz queue: "Lultzbot Taz 6 Queue Lulzbot TAZ6" is not searchable...sometimes. The "DO NOT AUTHORIZE- TEMPORARY USER Lulzbot TAZ6" is searchable
-        
         webElementList = driver.find_elements_by_xpath(xpathSearch)
         jobMatchList = []
         for i in webElementList:
-            #print((i.find_element_by_xpath('..')).text)
-            jobMatchList.append((i.find_element_by_xpath('..')).text)
+            jobMatchList.append(i.find_element_by_xpath('..').text)
+            jobMatchList.append(i.find_element_by_xpath('//../td[9]').text)
+            #target xpath //*[@id="job_box_741017"]/td[9]/a6
         for i in jobMatchList:
             #Where the job matches are printed in a selectable list form. 
             print(jobMatchList.index(i)," )  ",i)
+        '''
+        for i in webElementList:
+            print((i.find_element_by_xpath('..')).text)
+            jobNode = i.find_element_by_xpath('..')
+            print('this is jobnode ', jobNode)
+            allJobChildrenList = jobNode.find_elements_by_xpath('descendant::node()')
+            for x in allJobChildrenList:
+                print('print x.text', x.text)
+                jobMatchList.append(x.text)
+        for i in jobMatchList:
+            #Where the job matches are printed in a selectable list form. 
+            print(jobMatchList.index(i)," )  ",i)
+        '''
         return jobMatchList
-
+        
     def parser(self, string):
         #creates an array called splitString
         splitString = string.split(" ")
