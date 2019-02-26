@@ -37,8 +37,9 @@ class TdposMiner() :
         webElementList = driver.find_elements_by_xpath(xpathSearch)
         jobMatchList = []
         for i in webElementList:
-            jobMatchList.append(i.find_element_by_xpath('..').text)
-            jobMatchList.append(i.find_element_by_xpath('//../td[9]').text)
+            jobMatchList.append(i.find_element_by_xpath('..').text+i.find_element_by_xpath('../td[9]/a/span').get_attribute('innerHTML'))
+            #jobMatchList.append(i.find_element_by_xpath('../td[9]/a/span').get_attribute('innerHTML'))
+            #print('test xpath', i.find_element_by_xpath('../td[8]').text)
             #target xpath //*[@id="job_box_741017"]/td[9]/a6
         for i in jobMatchList:
             #Where the job matches are printed in a selectable list form. 
