@@ -115,7 +115,7 @@ class TdposMiner() :
             #need actual error handling in this area. 
             else:
                 print('queuename does not match expected: ', queueName)
-        print(date, time, printName, email, weight, duration, queueName)
+        #print(date, time, printName, email, weight, duration, queueName)
         #creates the identified print object
         printName = {"date":date, 
                     "time":time,
@@ -125,7 +125,7 @@ class TdposMiner() :
                     "duration":duration, 
                     "jobId":jobId,
                     "queueName":queueName}
-        print(printName)
+        #print(printName)
         #CONSIDER having this return a json object string instead
         return printName
 
