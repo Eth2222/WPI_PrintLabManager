@@ -47,22 +47,24 @@ To use run the 'commandLineInterface' file.
 
 ## Known Issues:
 
-- Randomly unable to find any matching jobs or just ulitmaker queued jobs.  Very strange. May have to do with how the page is loading. 
- *seems like this happens when there is more than one job under the same email*
+
 
 ## todo:
 
-- Clean the heaping pile of trash that is this program. There are a bunch of unused imports and unused files, but some may be useful for building an interface in the future(with flask or tkinter, ~~they're both here!~~ in my repo and ignored. )
+- ability select multiple prints
+
+- make more error handling, specific areas include: printjob list selection.
 
 - enable class input for MQP, ES1310 etc
   - make a way to crosscheck WPI ID with class rosters
 
-- a way to select multiple prints, right now the first thing found in the list that matches the email is used
-
 - create a UI
+    -thinking a one page website with vue.js and a flask website
 
 - consider an SQL database or Pandas Dataframe for better management of multiple prints and more flexible search terms
 
 - make it run on raspberry PI
 
 - connect a Thermal Printer
+
+- re-write the whole thing in js 

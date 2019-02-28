@@ -25,9 +25,10 @@ class googleSheetsPoster:
         
         #This is where the data is actually posted
         print(requests.post(url))
+        '''
         if '<Response [200]>' in requests.post(url):
             print("sucessfully submitted to form")
-        
+        '''
 '''
 def main():
     googleSheetsPoster.fillForm()
