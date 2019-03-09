@@ -3,3 +3,4 @@ UnusedFiles/
 token.json
 credentials.json
 #comment
+__pycache__/tdposUserCredentials.cpython-37.pyc
