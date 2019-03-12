@@ -15,6 +15,7 @@ class commandLineInterface:
                 print('Email not found. Restarting search') 
         printSelectionNumber = int(input("please type the number next to the print you would like to queue "))
         try:
+            printJobDict = ' '
             printJobDict = TdposInterface.TdposMiner.parser(self, jobMatchList[printSelectionNumber])
         except Exception as e1:
             print(e1)

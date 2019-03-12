@@ -74,10 +74,13 @@ class TdposMiner() :
                 printNameIndex = splitString.index(text)
         # Retrieve the Index of EST
         #should really have a try block around this for statement
+        #est/edt is for daylight savings
         for text in splitString:
             if 'EST' in text:
                 #print(text)
                 #print (splitString.index(text))
+                estIndex = splitString.index(text)
+            elif 'EDT' in text:
                 estIndex = splitString.index(text)
             
         #iterates from the EST string item to the .gcode, adding all to the print name
@@ -109,9 +112,9 @@ class TdposMiner() :
         #iterate through the list looking for matches, iterates backwards because the printer ID is at the end. A little hackey but it works.
         for i in reversed(queueName):
             if '51247' in queueName:
-                queueName = 'Ultimaker 3'
+                queueName = 'Ultimaker_3'
             elif '51246' in queueName:
-                queueName = 'Lulzbot Taz 6'
+                queueName = 'Lulzbot_Taz_6'
             #need actual error handling in this area. 
             else:
                 print('queuename does not match expected: ', queueName)

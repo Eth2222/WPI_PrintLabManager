@@ -47,7 +47,9 @@ To use run the 'commandLineInterface' file.
 
 ## Known Issues:
 
+- need to submit the actual print time
 
+- when no prints are found, need to throw an error
 
 ## todo:
 
