@@ -15,7 +15,7 @@ class googleSheetsPoster:
         #new form ID:
         #https://docs.google.com/forms/d/e/1FAIpQLSeGLNIhUCkON1tQJpbe9wIzrgUPIsfYB5QrNYDyNOAoeY-xVQ/viewform?usp=pp_url&entry.1102589694=NAME&entry.799051989=EMAIL&entry.1829673705=PRINTNAME&entry.1926296081=Lulzbot+Taz+6&entry.1723229820=0h+0m&entry.1191086835=12345&entry.1878466307=COLOR&entry.546565404=PLA&entry.533100273=Basic
         formId = '1FAIpQLSeGLNIhUCkON1tQJpbe9wIzrgUPIsfYB5QrNYDyNOAoeY-xVQ'
-        url = 'https://docs.google.com/forms/d/e/'+formId+'/formResponse?usp=pp_url'+'&entry.1102589694='+str(printJobDict.get('customerName'))+'&entry.799051989='+str(printJobDict.get('email'))+'&entry.1829673705='+str(printJobDict.get('printName'))+'&entry.1926296081='+str(printJobDict.get('queueName'))+'&entry.1723229820='+'1hr+2min'+'&entry.1191086835='+str(printJobDict.get('jobId'))+'&entry.1878466307='+str(printJobDict.get('colorPref'))+'&entry.546565404='+'PLA'+'&entry.533100273='+'Basic'
+        url = 'https://docs.google.com/forms/d/e/'+formId+'/formResponse?usp=pp_url'+'&entry.1102589694='+str(printJobDict.get('customerName'))+'&entry.799051989='+str(printJobDict.get('email'))+'&entry.1829673705='+str(printJobDict.get('printName'))+'&entry.1926296081='+str(printJobDict.get('queueName'))+'&entry.1723229820='+str(printJobDict.get('duration'))+'&entry.1191086835='+str(printJobDict.get('jobId'))+'&entry.1878466307='+str(printJobDict.get('colorPref'))+'&entry.546565404='+'PLA'+'&entry.533100273='+'Basic'
         print(url)
         #+'&entry.1416598942='+ no class option right now
         #how does this wokr? &entry.1416598942=ME+2300&

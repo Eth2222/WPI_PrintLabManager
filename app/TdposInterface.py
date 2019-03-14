@@ -100,6 +100,9 @@ class TdposMiner() :
         email = splitString[printNameIndex+1]
         weight = splitString[printNameIndex+2]
         duration = splitString[printNameIndex+4]
+        #at this point this is a string with the format hh:mm
+        splitDuration = duration.split(':')
+        duration = (splitDuration[0]+'h '+ splitDuration[1]+'m')
         #job ID parsing to remove the integers from the string
         #jobId = splitString[printNameIndex+10]
         jobId = string
@@ -110,14 +113,14 @@ class TdposMiner() :
         #there are a bunch of numbers with four digits, so a list is returned
         queueName = re.findall(r'\d\d\d\d\d', queueName)
         #iterate through the list looking for matches, iterates backwards because the printer ID is at the end. A little hackey but it works.
-        for i in reversed(queueName):
-            if '51247' in queueName:
-                queueName = 'Ultimaker_3'
-            elif '51246' in queueName:
-                queueName = 'Lulzbot_Taz_6'
-            #need actual error handling in this area. 
-            else:
-                print('queuename does not match expected: ', queueName)
+        try:
+            for i in reversed(queueName):
+                if '51247' in queueName:
+                    queueName = 'Ultimaker 3'
+                elif '51246' in queueName:
+                    queueName = 'Lulzbot Taz 6'
+        except Exception as e2:
+            print(e2)
         #print(date, time, printName, email, weight, duration, queueName)
         #creates the identified print object
         printName = {"date":date, 
