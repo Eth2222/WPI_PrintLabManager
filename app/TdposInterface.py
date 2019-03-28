@@ -43,20 +43,9 @@ class TdposMiner() :
             #target xpath //*[@id="job_box_741017"]/td[9]/a6
         for i in jobMatchList:
             #Where the job matches are printed in a selectable list form. 
-            print(jobMatchList.index(i)," )  ",i)
-        '''
-        for i in webElementList:
-            print((i.find_element_by_xpath('..')).text)
-            jobNode = i.find_element_by_xpath('..')
-            print('this is jobnode ', jobNode)
-            allJobChildrenList = jobNode.find_elements_by_xpath('descendant::node()')
-            for x in allJobChildrenList:
-                print('print x.text', x.text)
-                jobMatchList.append(x.text)
-        for i in jobMatchList:
-            #Where the job matches are printed in a selectable list form. 
-            print(jobMatchList.index(i)," )  ",i)
-        '''
+            #added the +1 to get rid of the zero in the list
+            print((jobMatchList.index(i)+1)," )  ",i)
+
         return jobMatchList
         
     def parser(self, string):
@@ -72,6 +61,10 @@ class TdposMiner() :
                 printNameIndex = splitString.index(text)
             elif '.stl' in text:
                 printNameIndex = splitString.index(text)
+        #new statement to find the printname index based on the grams
+        tempGrams = re.findall(r'/\d\d/g',splitString)
+        print ('tempgrams: ', tempGrams)
+
         # Retrieve the Index of EST
         #should really have a try block around this for statement
         #est/edt is for daylight savings
@@ -106,7 +99,7 @@ class TdposMiner() :
         #job ID parsing to remove the integers from the string
         #jobId = splitString[printNameIndex+10]
         jobId = string
-        jobId = re.findall(r'\d\d\d\d\d', jobId)
+        jobId = re.findall(r'\d\d\d\d\d\d\d', jobId)
         jobId = str(jobId[0])
         #now find the queuename with a similar method
         queueName = string

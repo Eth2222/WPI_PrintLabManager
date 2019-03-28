@@ -53,7 +53,6 @@ To use run the 'commandLineInterface' file.
 
 - ability select multiple prints
 
-- make more error handling, specific areas include: printjob list selection.
 
 - enable class input for MQP, ES1310 etc
   - make a way to crosscheck WPI ID with class rosters
