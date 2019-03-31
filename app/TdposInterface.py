@@ -33,19 +33,27 @@ class TdposMiner() :
         #xpathSearch = "//*[contains(.,'"+username+"')]"
         xpathSearch = "//*[text()[contains(.,'"+username+"')]]"
         #returns a list of elements with that name 
-        #there is some issue here where the top Taz queue: "Lultzbot Taz 6 Queue Lulzbot TAZ6" is not searchable...sometimes. The "DO NOT AUTHORIZE- TEMPORARY USER Lulzbot TAZ6" is searchable
         webElementList = driver.find_elements_by_xpath(xpathSearch)
         jobMatchList = []
         for i in webElementList:
-            jobMatchList.append(i.find_element_by_xpath('..').text+i.find_element_by_xpath('../td[9]/a/span').get_attribute('innerHTML'))
-            #jobMatchList.append(i.find_element_by_xpath('../td[9]/a/span').get_attribute('innerHTML'))
-            #print('test xpath', i.find_element_by_xpath('../td[8]').text)
-            #target xpath //*[@id="job_box_741017"]/td[9]/a6
-        for i in jobMatchList:
-            #Where the job matches are printed in a selectable list form. 
-            #added the +1 to get rid of the zero in the list
-            print((jobMatchList.index(i)+1)," )  ",i)
+            #This searches the inner HTML via Xpath
+            #jobMatchList.append(i.find_element_by_xpath('..').text+i.find_element_by_xpath('../td[4]').get_attribute('innerHTML'))
+            printEntry = (i.find_element_by_xpath('..').text)
+            #goes up three levels to find all the text in that queue, this includes the queuename!
+            queueText = ((i.find_element_by_xpath('../../..')).text)
+            if 'Ultimaker 3' in queueText:
+                printEntry = printEntry + (' Ultimaker 3')
+            elif 'Taz' in queueText:
+                printEntry = printEntry + (' Lulzbot Taz 6')
+            else: 
+                #this should be an error 
+                printEntry = printEntry + (' QUEUENAME NOT FOUND')
 
+            jobMatchList.append(printEntry)
+        #iterate through the list to remove the already queued prints
+        for i in jobMatchList: 
+            if "In queue" not in i:    
+                del i
         return jobMatchList
         
     def parser(self, string):
@@ -54,69 +62,70 @@ class TdposMiner() :
         print(splitString)
         #finds gcode in the list, then makes it a marker to navigate the list from 
         #should really have a try block around this for statement
-        for text in splitString:
-            if 'gcode' in text:
-                #print(text)
-                #print (splitString.index(text))
-                printNameIndex = splitString.index(text)
-            elif '.stl' in text:
-                printNameIndex = splitString.index(text)
+        try:
+            for text in splitString:
+                if 'wpi' in text:
+                    #finds the index of the UserName
+                    userNameIndex = (splitString.index(text))
+                    pass
+        except Exception as e2:
+            raise Exception('Cannot queue prints for non WPI emails. This is email is: ', text)
+            print(e2)
+        
         #new statement to find the printname index based on the grams
-        tempGrams = re.findall(r'/\d\d/g',splitString)
-        print ('tempgrams: ', tempGrams)
+        #tempGrams = re.findall(r'/\d\d/g',splitString)
+        #print ('tempgrams: ', tempGrams)
 
         # Retrieve the Index of EST
         #should really have a try block around this for statement
         #est/edt is for daylight savings
         for text in splitString:
-            if 'EST' in text:
-                #print(text)
-                #print (splitString.index(text))
-                estIndex = splitString.index(text)
-            elif 'EDT' in text:
-                estIndex = splitString.index(text)
+            match = re.search(r'\d\d\:\d\d', text)
+            if match:
+                #print('found match', match.group())
+                timeIndex = splitString.index(match.group())
+                #print('timeIndex: ', timeIndex)
+                #leave the for loop as soon as the first match is found
+                break
             
         #iterates from the EST string item to the .gcode, adding all to the print name
         #need to use .join here in the range, may need to make a new temp list in the range
         #this seems like a very complex way to join items in a range in a list
         tempList = []
-        for i in range(estIndex+1, printNameIndex+1):
+        print('time index, username index:', timeIndex ," , " , userNameIndex)
+        for i in range(timeIndex+1, userNameIndex):
             tempList.append(splitString[i])
-        #print('tempList', tempList) 
-        printName = ('_'.join(tempList))
-        #print('printname', printName)
+        #the %20 is an expiremental way to add spaces to print names
+        printName = ('%20'.join(tempList))
+        #print("printName: ", printName)
+
     
         #define all variables to create the printjob object
         date = splitString[0]
         time = splitString[1]
         printName = printName
-        email = splitString[printNameIndex+1]
-        weight = splitString[printNameIndex+2]
-        duration = splitString[printNameIndex+4]
+        email = splitString[userNameIndex]
+        weight = splitString[userNameIndex+1]
+        duration = splitString[userNameIndex+3]
         #at this point this is a string with the format hh:mm
         splitDuration = duration.split(':')
-        duration = (splitDuration[0]+'h '+ splitDuration[1]+'m')
+        duration = (splitDuration[0]+'h%20'+ splitDuration[1]+'m')
         #job ID parsing to remove the integers from the string
-        #jobId = splitString[printNameIndex+10]
+        #jobId = splitString[userNameIndex+10]
         jobId = string
         jobId = re.findall(r'\d\d\d\d\d\d\d', jobId)
         jobId = str(jobId[0])
         #now find the queuename with a similar method
         queueName = string
         #there are a bunch of numbers with four digits, so a list is returned
-        queueName = re.findall(r'\d\d\d\d\d', queueName)
-        #iterate through the list looking for matches, iterates backwards because the printer ID is at the end. A little hackey but it works.
-        try:
-            for i in reversed(queueName):
-                if '51247' in queueName:
-                    queueName = 'Ultimaker 3'
-                elif '51246' in queueName:
-                    queueName = 'Lulzbot Taz 6'
-        except Exception as e2:
-            print(e2)
+        if 'Ultimaker' in splitString:
+            queueName = 'Ultimaker%203'
+        elif 'Taz' in splitString:
+            queueName = 'Lulzbot%20Taz%206'
+
         #print(date, time, printName, email, weight, duration, queueName)
-        #creates the identified print object
-        printName = {"date":date, 
+        #creates the identified print Dictionary object
+        printInfo = {"date":date, 
                     "time":time,
                     "printName": printName, 
                     "email":email, 
@@ -124,17 +133,32 @@ class TdposMiner() :
                     "duration":duration, 
                     "jobId":jobId,
                     "queueName":queueName}
+        '''
+        #for debugging purposes, see where the data is put in the dict, and if anything is missing
+        print('date: ', printInfo["date"])
+        print('time: ', printInfo["time"])
+        print('printName: ', printInfo["printName"])
+        print('email: ', printInfo["email"])
+        print('weight: ', printInfo["weight"])
+        print('duration: ', printInfo["duration"])
+        print('jobID: ', printInfo["jobId"])
+        print('queueName: ', printInfo["queueName"])
+        '''
         #print(printName)
-        #CONSIDER having this return a json object string instead
-        return printName
+        return printInfo
+'''
+    @staticmethod
+    def printDict(dictionary):
+        for key, value in dictionary:
+            print(i.index(), i)
+'''
 
 #15.12.2018 17:08 EST	Spiral sphere_ornament_2013-11-23.gcode	Ultimaker 3 - 05	gr-fisprototypinglab@wpi.edu	U3, PLA, 0.25		4.13g	40m / 46m
 #what the actual return text looks like:
 #25.12.2018 21:09 EST Viking Duck.gcode emerrill@wpi.edu 6.09g $0.00 00:36 / - In queue Job ID:663678, Printer ID:51246
 '''
 TODO
--figure out how to parse file names with spaces
-        -regex for find date: /^(?:[^ ]*\ ){2}([^ ]*)/g
+
 -develop seperate search methods for part names and usernames
 -whenever the program fails the thing doesn't close...need better error hadling, or any at all
 -create a printjob object out of the collected

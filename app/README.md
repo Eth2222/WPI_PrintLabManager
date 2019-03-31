@@ -45,6 +45,16 @@ To use run the 'commandLineInterface' file.
 
 - the information is added the the printDetails dict, and then put in a prefilled google forms url and posted to the sheet.
 
+##ChangeLog (3/31/19)
+
+- updated to be compatible with the March update of 3dprinteros 
+
+- added spaces to print names
+
+- now lists full job id in submission
+
+- added more error handling throughout 
+
 ## Known Issues:
 
 - when no prints are found, need to throw an error
