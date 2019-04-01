@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['commandlineInterface.py'],
+a = Analysis(['commandLineInterface.py'],
              pathex=['C:\\Users\\Ethan Merrill\\Google Drive\\coding\\WPI_PrintLabManager\\app'],
              binaries=[],
              datas=[],
@@ -21,7 +21,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='commandlineInterface',
+          name='commandLineInterface',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -33,4 +33,4 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=True,
-               name='commandlineInterface')
+               name='commandLineInterface')
