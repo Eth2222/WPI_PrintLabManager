@@ -107,13 +107,15 @@ class TdposMiner() :
         email = splitString[userNameIndex]
         weight = splitString[userNameIndex+1]
         duration = splitString[userNameIndex+3]
+        #print(duration)
         #at this point this is a string with the format hh:mm
         splitDuration = duration.split(':')
         duration = (splitDuration[0]+'h%20'+ splitDuration[1]+'m')
+        #print(duration)
         #job ID parsing to remove the integers from the string
         #jobId = splitString[userNameIndex+10]
         jobId = string
-        jobId = re.findall(r'\d\d\d\d\d\d\d', jobId)
+        jobId = re.findall(r'\d\d\d\d\d\d', jobId)
         jobId = str(jobId[0])
         #now find the queuename with a similar method
         queueName = string
