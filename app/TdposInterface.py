@@ -92,7 +92,7 @@ class TdposMiner() :
         #need to use .join here in the range, may need to make a new temp list in the range
         #this seems like a very complex way to join items in a range in a list
         tempList = []
-        print('time index, username index:', timeIndex ," , " , userNameIndex)
+        #print('time index, username index:', timeIndex ," , " , userNameIndex)
         for i in range(timeIndex+1, userNameIndex):
             tempList.append(splitString[i])
         #the %20 is an expiremental way to add spaces to print names
