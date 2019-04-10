@@ -33,11 +33,13 @@ class commandLineInterface:
     def enterPrintJob(self, selection, printJobs):
         while True:
         #trying to correlate the number selection with a number in the printjobs list
-            if selection in printJobs:
-                print(printJobs)
-            else:
-                print('errrorrorororoororor')
-                break
+            for i in selection:
+                print('after for i in printjobs')
+                print(i)
+                print(selection.index(i))
+                print(printJobs.index(selection.index(i)))
+ 
+                
 '''
     @staticmethod
     def obtainPrintJob():
@@ -114,4 +116,5 @@ if __name__ == '__main__':
         for i in printJobs:
             print((printJobs.index(i)+1)," )  ",i)  
         selection = commandLineInterface.selectPrintJobs(self, printJobs)
+        print(selection)
         commandLineInterface.enterPrintJob(self, selection, printJobs)
