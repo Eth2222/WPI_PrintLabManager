@@ -3,7 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import printJob
 import re
-import commandLineInterface
+#import commandLineInterface
 import tdposUserCredentials
 import globals
 
