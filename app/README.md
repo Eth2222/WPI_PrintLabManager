@@ -63,6 +63,13 @@ To use run the 'commandLineInterface' file.
 
 - ability select multiple prints
 
+- reference the full user list and enter the information in the form
+
+- split the initialize listener method. THis will enable a method which will only launch a headless instance of chrome with special settings. Another function can be created for the navigation to the user permissions and print queue pages for each driver.
+
+- Cloud database for users
+
+- cloud database for all prints. This would greatly enhance the speed of the program
 
 - enable class input for MQP, ES1310 etc
   - make a way to crosscheck WPI ID with class rosters
@@ -77,3 +84,22 @@ To use run the 'commandLineInterface' file.
 - connect a Thermal Printer
 
 - re-write the whole thing in js 
+
+##Change log (05/15/19)
+
+- Added Multiple Print Entry! 
+
+- Re-architected the methods for a more intuitive program structure command, more work needed here. 
+
+- began construction of user permissions checker
+
+
+##Change log (3/31/19)
+
+- updated to be compatible with the March update of 3dprinteros 
+
+- added spaces to print names
+
+- now lists full job id in submission
+
+- added more error handling throughout 

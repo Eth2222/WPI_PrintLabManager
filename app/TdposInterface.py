@@ -1,16 +1,26 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 import printJob
 import re
 #import commandLineInterface
 import tdposUserCredentials
 import globals
 
+
+
 class TdposMiner() :
     
     def initializeListener(self):
-        driver = webdriver.Chrome()
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--log-level=3")
+        #chrome_options.add_argument("--disable-logging")
+        chrome_options.add_argument("--allow-running-insecure-content")
+        chrome_options.add_argument("--remote-debugging-port=9222") #http://localhost:9222
+        driver = webdriver.Chrome(chrome_options=chrome_options)
         #login procedure. Will need to make username and password gui inputs in future
         driver.get('https://cloud.3dprinteros.com/printing/')
         driver.find_element_by_id('signinUsername').send_keys(tdposUserCredentials.tdposUsername)
@@ -71,6 +81,7 @@ class TdposMiner() :
         except Exception as e2:
             raise Exception('Cannot queue prints for non WPI emails. This is email is: ', text)
             print(e2)
+
         
         #new statement to find the printname index based on the grams
         #tempGrams = re.findall(r'/\d\d/g',splitString)

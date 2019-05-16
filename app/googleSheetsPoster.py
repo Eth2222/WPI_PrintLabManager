@@ -15,13 +15,14 @@ class googleSheetsPoster:
         #new form ID:
         #https://docs.google.com/forms/d/e/1FAIpQLSeGLNIhUCkON1tQJpbe9wIzrgUPIsfYB5QrNYDyNOAoeY-xVQ/viewform?usp=pp_url&entry.1102589694=NAME&entry.799051989=EMAIL&entry.1829673705=PRINTNAME&entry.1926296081=Lulzbot+Taz+6&entry.1723229820=0h+0m&entry.1191086835=12345&entry.1878466307=COLOR&entry.546565404=PLA&entry.533100273=Basic
         formId = '1FAIpQLSeGLNIhUCkON1tQJpbe9wIzrgUPIsfYB5QrNYDyNOAoeY-xVQ'
-        url = 'https://docs.google.com/forms/d/e/'+formId+'/formResponse?usp=pp_url'+'&entry.1102589694='+str(printJobDict.get('customerName'))+'&entry.799051989='+str(printJobDict.get('email'))+'&entry.1829673705='+str(printJobDict.get('printName'))+'&entry.1926296081='+str(printJobDict.get('queueName'))+'&entry.1723229820='+str(printJobDict.get('duration'))+'&entry.1191086835='+str(printJobDict.get('jobId'))+'&entry.1878466307='+str(printJobDict.get('colorPref'))+'&entry.546565404='+'PLA'+'&entry.533100273='+'Basic'
+        url = 'https://docs.google.com/forms/d/e/'+formId+'/formResponse?usp=pp_url'+'&entry.1102589694='+str(printJobDict.get('customerName'))+'&entry.799051989='+str(printJobDict.get('email'))+'&entry.1829673705='+str(printJobDict.get('printName'))+'&entry.1926296081='+str(printJobDict.get('queueName'))+'&entry.1723229820='+str(printJobDict.get('duration'))+'&entry.1191086835='+str(printJobDict.get('jobId'))+'&entry.1878466307='+str(printJobDict.get('colorPref'))+'&entry.546565404='+'PLA'+'&entry.533100273='+'Basic' #str(printJobDict.get('permissions'))
         #This is where the data is actually posted
         response = requests.post(url)
         print(type(response))
-        #print(url)
+        #uncomment below for bug testing
+        print(url)
         
-        if ('200' in response):
+        if ('200' or 200 in response):
             print("sucessfully submitted to form")
             return
         else: 

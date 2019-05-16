@@ -1,3 +1,3 @@
 {
-  "app/test_pytest.py::test_enterPrintJob": true
+  "app/test_pytest.py": true
 }

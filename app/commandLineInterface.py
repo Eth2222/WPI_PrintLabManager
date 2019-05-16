@@ -4,7 +4,7 @@ import globals
 #from PyInquirer import style_from_dict, Token, prompt
 #from PyInquirer import Validator, ValidationError
 import re
-
+#import userPermissionsChecker
 from examples import custom_style_2
 
 class commandLineInterface:
@@ -13,9 +13,9 @@ class commandLineInterface:
             userEmail = input('type an email ')
             try:
                 jobMatchList = (TdposInterface.TdposMiner.search(self, globals.driver, userEmail))
-                print('jobMatchList returned')
-                return jobMatchList
-                if not jobMatchList:
+                if len(jobMatchList) != 0:
+                    return jobMatchList
+                else:
                     raise Exception('empty list error')
                 for i in jobMatchList:
                  #Where the job matches are printed in a selectable list form. 
@@ -27,19 +27,38 @@ class commandLineInterface:
                 print('Email not found. Restarting search') 
 
     def selectPrintJobs(self, printJobs):
-        printSelection = input('select prints')
-        return(re.findall(r'\d*', printSelection))
-        
-    def enterPrintJob(self, selection, printJobs):
+        printSelection = input('select prints ')
+        tempList = re.findall(r'\d*', printSelection)
+        for i in tempList:
+            if i.isdigit() == True:
+                int(i)
+            else:
+                tempList.remove(i)
+        parsedSelection = tempList
+        return(parsedSelection)
+
+    def print_details(self, parsedPrint):
+        parsedPrint.update({'colorPref':input("Color: ")})
+        ##insert material information here later
+        return parsedPrint  
+
+    def enterPrintJob(self, selection, printJobs, customerName):
         while True:
         #trying to correlate the number selection with a number in the printjobs list
+            selected_prints_list = []
             for i in selection:
-                print('after for i in printjobs')
-                print(i)
-                print(selection.index(i))
-                print(printJobs.index(selection.index(i)))
+                #convert the input to int
+                i = int(i)
+                #print(selection.index(i))
+                parsedPrint = TdposInterface.TdposMiner.parser(self, printJobs[i-1])
+                print(parsedPrint.get('printName'))
+                parsedPrint.update({'customerName':customerName})
+                complete_print_info = commandLineInterface.print_details(self, parsedPrint)
+                selected_prints_list.append(complete_print_info)
+                #now we need to add the extra information to the print. I will write a hepler method for this 
+                # not sure why this is here selected_prints_list = commandLineInterface.print_details(self, parsedPrint)
+            return(selected_prints_list)
  
-                
 '''
     @staticmethod
     def obtainPrintJob():
@@ -117,4 +136,8 @@ if __name__ == '__main__':
             print((printJobs.index(i)+1)," )  ",i)  
         selection = commandLineInterface.selectPrintJobs(self, printJobs)
         print(selection)
-        commandLineInterface.enterPrintJob(self, selection, printJobs)
+        #user validation check here
+        customerName = input('Customer Name: ')
+        selected_prints_list = commandLineInterface.enterPrintJob(self, selection, printJobs, customerName)
+        for i in selected_prints_list:
+            googleSheetsPoster.googleSheetsPoster.fillForm(i)
